@@ -1,29 +1,30 @@
 (ns soup.db
-  (:require [clj-dbcp.core :as dbcp]
+  (:require [clojure.tools.logging :refer (info)]
+   [clj-dbcp.core :as dbcp]
             [clojure.java.jdbc :as jdbc]
             [clojure.java.jdbc.sql :as sql]))
 
-(defn create-db-connection [spec]
-  {:datasource (dbcp/make-datasource spec)})
+(def ^:dynamic *db*)
+(def pool-settings {:init-size 1 :max-idle 2 :max-active 5})
+
+(defn create-dbcp [spec settings]
+  (let [options (merge spec settings)]
+    (info (str "Creating DBCP: " options))
+    {:datasource (dbcp/make-datasource options)}))
 
 (def prod-db
   {:adapter :mysql
-   :host 'localhost
-   :database 'soup
+   :host "localhost"
+   :database "soup"
    :username "root"
    :password "admin"})
 
-(def dev-db
-  {:adapter :h2
-   :target :memory
-   :database "soup;INIT=RUNSCRIPT FROM 'resources/soup-h2.sql';MODE=MySQL"})
+(defn load-prod-db []
+  (alter-var-root #'*db* (constantly (create-dbcp prod-db pool-settings))))
 
-(defn insert-user [rec]
-  (jdbc/with-connection dev-db
-    (jdbc/insert-records :user rec)))
+(defn insert-user! [rec]
+  (jdbc/insert! *db* :user rec))
 
 (defn fetch-user [id]
-  (jdbc/with-connection dev-db
-    (jdbc/with-query-results users 
-      (vec (sql/select * :user (sql/where {:id id})))
-      (first users))))
+  (let [q (sql/select * :user (sql/where {:id id}))]
+    (first (jdbc/query *db* q))))
