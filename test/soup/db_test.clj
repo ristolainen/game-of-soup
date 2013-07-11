@@ -3,7 +3,7 @@
             [soup.db :refer :all])
   (:import [java.util Date]))
 
-(def sql-script "resources/soup-h2.sql")
+(def sql-script "test-resources/soup-h2.sql")
 
 (def test-db
   {:adapter :h2
