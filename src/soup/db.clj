@@ -1,6 +1,6 @@
 (ns soup.db
   (:require [clojure.tools.logging :refer (info)]
-   [clj-dbcp.core :as dbcp]
+            [clj-dbcp.core :as dbcp]
             [clojure.java.jdbc :as jdbc]
             [clojure.java.jdbc.sql :as sql]))
 
