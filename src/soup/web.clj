@@ -1,5 +1,7 @@
 (ns soup.web
-  (:require [compojure.core :refer :all]
+  (:require [soup.admin :as admin]
+            [soup.middleware :refer :all]
+            [compojure.core :refer :all]
             [compojure.route :as route]
             [compojure.handler :as handler]
             [ring.util.response :refer :all]
@@ -18,13 +20,22 @@
 (defroutes api-routes
   (context "/" []
            (GET "/" []
-                (response (get-server-info))))
+                (response (get-server-info)))
+           (ANY "/" []
+                (-> (response nil) (status 405))))
   (context "/api" []
            (GET "/" []
-                (response {:api-version "0.1"})))
+                (response {:api-version "0.1"}))
+           (GET "/user/:id" [id]
+                (response (admin/get-user id)))
+           (POST "/user" {params :params}
+                 (response (admin/new-user! params)))
+           (ANY "/" []
+                (-> (response nil) (status 405))))
   (route/not-found "<h1>Page not found</h1>"))
 
 (def app
   (-> (handler/api api-routes)
+      (wrap-request-logger)
+      (wrap-response-logger)
       (wrap-restful-response)))
-

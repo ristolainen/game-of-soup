@@ -15,12 +15,13 @@
     (create-dbcp test-db pool-settings)))
 
 (deftest save-and-fetch-user
-  (binding [*db* (create-test-dbcp)]
-    (let [created-date (Date.)
-          _ (insert-user! {:id "schneider" 
-                           :name "Admiral von Schneider" 
-                           :created created-date})
-          {:keys [id name created]} (fetch-user "schneider")]
-      (is (= "schneider" id))
-      (is (= "Admiral von Schneider" name))
-      (is (= created-date created)))))
+  (testing "save and fetch user"
+    (binding [*db* (create-test-dbcp)]
+      (let [created-date (Date.)
+            _ (insert-user! {:id "schneider" 
+                             :name "Admiral von Schneider" 
+                             :created created-date})
+            {:keys [id name created]} (fetch-user "schneider")]
+        (is (= "schneider" id))
+        (is (= "Admiral von Schneider" name))
+        (is (= created-date created))))))
