@@ -4,7 +4,6 @@
             [soup.middleware :refer :all]))
 
 (defn create-msg [parts]
-  (println parts)
   (apply str (interpose " " parts)))
 
 (deftest logger-middleware

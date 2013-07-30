@@ -5,8 +5,7 @@
             [compojure.route :as route]
             [compojure.handler :as handler]
             [ring.util.response :refer :all]
-            [ring.middleware.format-response 
-             :refer (wrap-restful-response)]
+            [ring.middleware.format :refer (wrap-restful-format)]
             [clj-time.core :refer (now)]
             [clj-time.format :refer (unparse formatter)]))
 
@@ -38,4 +37,4 @@
   (-> (handler/api api-routes)
       (wrap-request-logger)
       (wrap-response-logger)
-      (wrap-restful-response)))
+      (wrap-restful-format)))
