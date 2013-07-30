@@ -9,6 +9,7 @@
                  [clj-time "0.5.1"]
                  [compojure "1.1.5"]
                  [ring-middleware-format "0.3.0"]
+                 [hiccup "1.0.4"]
                  [org.clojure/java.jdbc "0.3.0-alpha4"]
                  [clj-dbcp "0.8.1"]
                  [mysql/mysql-connector-java "5.1.25"]]
