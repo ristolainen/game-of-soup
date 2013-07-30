@@ -4,12 +4,11 @@
             [ring.mock.request :refer :all]))
 
 (deftest test-routes
-  (testing "root"
-    (let [response (api-routes (request :get "/"))]
-      (is (= 200 (:status response)))
-      (is (contains? (:body response) :version))))
   (testing "api"
     (let [response (api-routes (request :get "/api"))]
+      (is (= 200 (:status response)))
+      (is (contains? (:body response) :version)))
+    (let [response (api-routes (request :get "/api/version"))]
       (is (= 200 (:status response)))
       (is (contains? (:body response) :api-version)))
     (let [response (api-routes (request :put "/api"))]

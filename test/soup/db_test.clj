@@ -25,3 +25,16 @@
         (is (= "schneider" id))
         (is (= "Admiral von Schneider" name))
         (is (= created-date created))))))
+
+(deftest save-update-and-fetch-user
+  (testing "save and fetch user"
+    (binding [*db* (create-test-dbcp)]
+      (let [created-date (Date.)
+            _ (insert-user! {:id "djmh" 
+                             :name "Dr Jekyll" 
+                             :created created-date})
+            _ (update-user! "djmh" {:name "Mr Hyde"})
+            {:keys [id name created]} (fetch-user "djmh")]
+        (is (= "djmh" id))
+        (is (= "Mr Hyde" name))
+        (is (= created-date created))))))

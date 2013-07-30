@@ -22,8 +22,12 @@
 (defn load-prod-db []
   (alter-var-root #'*db* (constantly (create-dbcp prod-db pool-settings))))
 
-(defn insert-user! [rec]
-  (jdbc/insert! *db* :user rec))
+(defn insert-user! [{:keys [id name created]}]
+  (jdbc/insert! *db* :user {:id id :name name :created created}))
+
+(defn update-user! [id {:keys [name created]}]
+  (let [nil-filtered (into {} (remove (comp nil? val) {:name name :created created}))]
+    (jdbc/update! *db* :user nil-filtered (sql/where {:id id}))))
 
 (defn fetch-user [id]
   (let [q (sql/select * :user (sql/where {:id id}))]

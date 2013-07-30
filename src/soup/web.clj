@@ -38,7 +38,7 @@
            (GET "/user/:id" [id]
                 (response (admin/get-user id)))
            (POST "/user" {params :params}
-                 (response (admin/new-user! params)))
+                 (response (admin/save-user! params)))
            (ANY "/" []
                 (-> (response nil) (status 405))))
   (route/not-found "<h1>Page not found</h1>"))
